@@ -12,10 +12,9 @@ macro_rules! fmc_pins {
     ($($pin:expr),*) => {
         (
             $(
-                $pin.into_push_pull_output()
-                    .set_speed(stm32h7xx_hal::gpio::Speed::VeryHigh)
-                    .into_alternate_af12()
-                    .internal_pull_up(true)
+                $pin.into_push_pull_output().into_alternate::<12>()
+                // p.set_speed(stm32h7xx_hal::gpio::Speed::VeryHigh);
+                // p.internal_pull_up(true);
             ),*
         )
     };

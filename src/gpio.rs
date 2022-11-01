@@ -5,7 +5,7 @@ use stm32h7xx_hal::gpio::gpioc::PC7;
 
 // use stm32h7xx_hal::hal::digital::v2::InputPin;
 #[allow(unused_imports)]
-use stm32h7xx_hal::gpio::{Alternate, Analog, Input, Output, PullUp, PushPull};
+use stm32h7xx_hal::gpio::{Alternate, Analog, Input, Output, Pull, PushPull};
 // use stm32h7xx_hal::hal::digital::v2::OutputPin;
 
 pub use gpio::gpioa::PA0 as Daisy25;
@@ -57,7 +57,7 @@ pub struct GPIO {
     pub daisy6: Option<gpio::gpioc::PC12<Analog>>,
     pub daisy7: Option<gpio::gpiog::PG10<Analog>>,
     pub daisy8: Option<gpio::gpiog::PG11<Analog>>,
-    pub daisy9: Option<gpio::gpiob::PB4<Alternate<gpio::AF0>>>,
+    pub daisy9: Option<gpio::gpiob::PB4<Alternate<0, PushPull>>>,
     pub daisy10: Option<gpio::gpiob::PB5<Analog>>,
     pub daisy11: Option<gpio::gpiob::PB8<Analog>>,
     pub daisy12: Option<gpio::gpiob::PB9<Analog>>,
@@ -94,7 +94,7 @@ impl GPIO {
         daisy6: Option<gpio::gpioc::PC12<Analog>>,
         daisy7: Option<gpio::gpiog::PG10<Analog>>,
         daisy8: Option<gpio::gpiog::PG11<Analog>>,
-        daisy9: Option<gpio::gpiob::PB4<Alternate<gpio::AF0>>>,
+        daisy9: Option<gpio::gpiob::PB4<Alternate<0, PushPull>>>,
         daisy10: Option<gpio::gpiob::PB5<Analog>>,
         daisy11: Option<gpio::gpiob::PB8<Analog>>,
         daisy12: Option<gpio::gpiob::PB9<Analog>>,

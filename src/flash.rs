@@ -151,15 +151,20 @@ impl Flash {
         pf10: gpiof::PF10<Analog>,
         pg6: gpiog::PG6<Analog>,
     ) -> Self {
-        let _ncs = pg6.into_alternate_af10().set_speed(Speed::VeryHigh); //QUADSPI_BK1_NCS
+        let _ncs = pg6.into_alternate::<10>().set_speed(Speed::VeryHigh); //QUADSPI_BK1_NCS
 
-        let sck = pf10.into_alternate_af9().set_speed(Speed::VeryHigh);
-        let io0 = pf8.into_alternate_af10().set_speed(Speed::VeryHigh);
-        let io1 = pf9.into_alternate_af10().set_speed(Speed::VeryHigh);
-        let io2 = pf7.into_alternate_af9().set_speed(Speed::VeryHigh);
-        let io3 = pf6.into_alternate_af9().set_speed(Speed::VeryHigh);
+        let sck = pf10.into_alternate::<9>();
+        // sck.set_speed(Speed::VeryHigh);
+        let io0 = pf8.into_alternate::<10>();
+        // io0.set_speed(Speed::VeryHigh);
+        let io1 = pf9.into_alternate::<10>();
+        // .set_speed(Speed::VeryHigh);
+        let io2 = pf7.into_alternate::<9>();
+        // .set_speed(Speed::VeryHigh);
+        let io3 = pf6.into_alternate::<9>();
+        // .set_speed(Speed::VeryHigh);
 
-        let config = Config::new(133.mhz()).mode(QspiMode::OneBit);
+        let config = Config::new(stm32h7xx_hal::time::Hertz::from_raw(133)).mode(QspiMode::OneBit);
         let qspi = regs.bank1((sck, io0, io1, io2, io3), config, &clocks, prec);
 
         let mut flash = Flash {

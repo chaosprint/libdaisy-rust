@@ -15,7 +15,7 @@ mod app {
     use stm32h7xx_hal::timer::Timer;
 
     use libdaisy::gpio;
-    use libdaisy::prelude::*;
+    // use libdaisy::prelude::*;
     use libdaisy::system;
 
     #[shared]
@@ -33,7 +33,7 @@ mod app {
         let mut system = system::System::init(ctx.core, ctx.device);
         info!("Startup done!");
 
-        system.timer2.set_freq(500.ms());
+        system.timer2.set_freq(stm32h7xx_hal::time::Hertz::from_raw(2));
 
         (
             Shared {},
@@ -57,9 +57,9 @@ mod app {
         ctx.local.timer2.clear_irq();
 
         if *ctx.local.led_is_on {
-            ctx.local.seed_led.set_high().unwrap();
+            ctx.local.seed_led.set_high();
         } else {
-            ctx.local.seed_led.set_low().unwrap();
+            ctx.local.seed_led.set_low();
         }
         *ctx.local.led_is_on = !(*ctx.local.led_is_on);
     }

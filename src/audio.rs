@@ -120,6 +120,7 @@ pub struct Audio {
     output_stream: DmaOutputStream,
 }
 
+
 impl Audio {
     /// Setup audio handler
     pub fn new(
@@ -182,18 +183,18 @@ impl Audio {
             );
 
         info!("Setup up SAI...");
-        let sai1_rec = sai1_p.kernel_clk_mux(SAI1SEL_A::PLL3_P);
+        let sai1_rec = sai1_p.kernel_clk_mux(SAI1SEL_A::Pll3P);
         let master_config = I2SChanConfig::new(I2SDir::Rx).set_frame_sync_active_high(false);
         let slave_config = I2SChanConfig::new(I2SDir::Tx)
             .set_sync_type(I2SSync::Internal)
             .set_frame_sync_active_high(false);
 
         let pins_a = (
-            sai_mclk_a.into_alternate_af6(),
-            sai_sck_a.into_alternate_af6(),
-            sai_fs_a.into_alternate_af6(),
-            sai_sd_a.into_alternate_af6(),
-            Some(sai_sd_b.into_alternate_af6()),
+            sai_mclk_a.into_alternate::<6>(),
+            sai_sck_a.into_alternate::<6>(),
+            sai_fs_a.into_alternate::<6>(),
+            sai_sd_a.into_alternate::<6>(),
+            Some(sai_sd_b.into_alternate::<6>()),
         );
 
         // Hand off to audio module
@@ -218,9 +219,9 @@ impl Audio {
             .modify(|_, w| w.dir().memory_to_peripheral());
 
         info!("Setup up WM8731 Audio Codec...");
-        let i2c2_pins = (i2c_scl.into_alternate_af4(), i2c_sda.into_alternate_af4());
+        let i2c2_pins = (i2c_scl.into_alternate_open_drain::<4>(), i2c_sda.into_alternate_open_drain::<4>());
 
-        let mut i2c = i2c2_d.i2c(i2c2_pins, time::Hertz(100_000), i2c2_p, clocks);
+        let mut i2c = i2c2_d.i2c(i2c2_pins, time::Hertz::from_raw(100_000), i2c2_p, clocks);
 
         let codec_i2c_address: u8 = 0x1a; // or 0x1b if CSB is high
 
@@ -248,7 +249,7 @@ impl Audio {
 
             // wait until sai1's fifo starts to receive data
             info!("Sai1 fifo waiting to receive data.");
-            while sai1_rb.chb.sr.read().flvl().is_empty() {}
+            while sai1_rb.chb().sr.read().flvl().is_empty() {}
             info!("Audio started!");
             sai.enable();
             sai.try_send(0, 0).unwrap();
